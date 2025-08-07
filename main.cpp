@@ -183,8 +183,8 @@ dpp::embed buildInfoEmbed(std::vector<TopCountryData> topCountries) {
         .set_url("https://github.com/Civermau/Country-Mentioned-Bot-Cpp-Edition")
         .set_description("Let Yui inform you that you've just mentioned a country!")
         .set_color(dpp::colors::pink)
-        .set_thumbnail("https://preview.redd.it/natsuki-is-giving-a-manga-series-to-each-doki-what-series-v0-33i0kk4fmrtb1.jpg?width=640&crop=smart&auto=webp&s=0b504bfef500d505a5c5bec7c50b18f5db5d2c03")
-        .set_image("https://i.scdn.co/image/ab67616d0000b273865d58347d01148f7950ab1d");
+        .set_thumbnail("https://github.com/Civermau/Country-Mentioned-Bot-Cpp-Edition/blob/master/Images/Mini.jpg?raw=true")
+        .set_image("https://github.com/Civermau/Country-Mentioned-Bot-Cpp-Edition/blob/master/Images/Mega.jpg?raw=true");
     
     // Add fields for each top country
     if (topCountries.size() >= 1) {
