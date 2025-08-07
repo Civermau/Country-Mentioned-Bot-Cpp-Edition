@@ -4,6 +4,10 @@ Made one in C#, why not make another one in C++?
 
 Again, I found really funny having a bot on servers that could automatically detect countries in messages and send the respective image. But this time using sqlite to keep track of the mentions and display them in a cute way!
 
+<div align="center">
+   <img width="551" height="527" alt="image" src="https://github.com/user-attachments/assets/1252320a-a70b-4755-98b2-7a5a58479c75" />
+</div>
+
 ## 🌟 Features
 
 - **Automatic Country Detection**: Detects mentions of countries in both English and Spanish
@@ -57,6 +61,9 @@ Again, I found really funny having a bot on servers that could automatically det
    #Give it a proper name too, don't use bot uwu
    ./CountryMentionedBot
    ```
+
+### Or if you are lazy, you can just invite it to your own server!
+[click here, come on, it's not a virus](https://discord.com/oauth2/authorize?client_id=1311875601640194240&permissions=101440&integration_type=0&scope=bot)
    
 ## 🤖 Bot Commands
 
@@ -86,6 +93,10 @@ The bot expects country flag images in the `Images/` directory with the followin
 
 # IMPORTANT
 All of the country mentioned pictures, every single one of them, where made by [Tangermusic](https://linktr.ee/Tangermusic) (I still need to ask permission to upload them, if there are no images in the repo, I didn't got the permission unu)
+
+<img width="375" height="5000" alt="image" src="https://github.com/user-attachments/assets/bda51e10-1610-4f74-8d1d-ed514e91983d" />
+
+https://x.com/tangermusic/status/1652837806484385795
 
 ## 🔧 Configuration
 
