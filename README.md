@@ -100,7 +100,7 @@ https://x.com/tangermusic/status/1652837806484385795
 ## 🔧 Configuration
 
 ### Environment Variables
-- `BOT_TOKEN`: Your Discord bot token (automatically managed by the bot)
+- `BOT_TOKEN`: Your Discord bot token
 
 ### Bot Permissions
 The bot requires the following permissions:
