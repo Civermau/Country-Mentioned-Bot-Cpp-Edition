@@ -21,7 +21,6 @@ Again, I found really funny having a bot on servers that could automatically det
 
 ### Prerequisites
 
-- C++ compiler with C++17 support
 - [DPP (Discord++ Library)](https://github.com/brainboxdotcc/DPP)
 - SQLite3 development libraries
 
