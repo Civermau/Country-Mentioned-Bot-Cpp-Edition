@@ -93,7 +93,7 @@ The bot expects country flag images in the `Images/` directory with the followin
 # IMPORTANT
 All of the country mentioned pictures, every single one of them, where made by [Tangermusic](https://linktr.ee/Tangermusic) (I still need to ask permission to upload them, if there are no images in the repo, I didn't got the permission unu)
 
-<img width="375" height="5000" alt="image" src="https://github.com/user-attachments/assets/bda51e10-1610-4f74-8d1d-ed514e91983d" />
+<img  alt="image" src="https://github.com/user-attachments/assets/bda51e10-1610-4f74-8d1d-ed514e91983d" />
 
 https://x.com/tangermusic/status/1652837806484385795
 
