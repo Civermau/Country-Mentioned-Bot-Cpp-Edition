@@ -24,5 +24,6 @@ std::string getMostMentionedCountry();
 std::vector<TopCountryData> getTopThreeMentionedCountries();
 std::string loadBotToken();
 void saveBotToken(const std::string& token);
+std::string toUpperUTF8(const std::string& str);
 
 #endif // MAIN_H
