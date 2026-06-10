@@ -60,10 +60,6 @@ Again, I found really funny having a bot on servers that could automatically det
    #Give it a proper name too, don't use bot uwu
    ./CountryMentionedBot
    ```
-
-### Or if you are lazy, you can just invite it to your own server!
-[click here, come on, it's not a virus](https://discord.com/oauth2/authorize?client_id=1311875601640194240&permissions=101440&integration_type=0&scope=bot)
-   
 ## 🤖 Bot Commands
 
 - **Automatic Responses**: The bot automatically detects country mentions and responds with flag images
