@@ -130,14 +130,16 @@ std::vector<TopCountryData> getTopThreeMentionedCountries() {
 
 
 
-std::vector<TopCountryData> getUserTopThreeMentionedCountries() { //   ULTRA MEGA PENDING, FIX THIS I DON'T HAVE A WHERE YET
+std::vector<TopCountryData> getUserTopThreeMentionedCountries(const int &userID) { 
+  std::cout << "[DB] getUserTopThreeMentionedCountries userID: " << userID << std::endl;
   std::vector<TopCountryData> topUserCountries;
   sqlite3 *db;
   sqlite3_open("CountryMentionedBot.db", &db);
   sqlite3_stmt *stmt;
-  const char *sql = "SELECT c.en, um.mentions FROM countries c INNER JOIN user_mentions um ON c.id = um.id ORDER BY um.mentions DESC LIMIT 3";
+  const char *sql = "SELECT c.en, um.mentions FROM countries c INNER JOIN user_mentions um ON c.id = um.id WHERE um.user_id = ? ORDER BY um.mentions DESC LIMIT 3";
 
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {\
+    sqlite3_bind_int(stmt, 1, userID);
     while (sqlite3_step(stmt) == SQLITE_ROW) {
       TopCountryData country;
       const unsigned char *name_result = sqlite3_column_text(stmt, 0);

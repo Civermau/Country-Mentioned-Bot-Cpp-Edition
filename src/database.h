@@ -10,7 +10,7 @@ void addMentionCounter(const int &id);
 void addUserMentionCounter(const int &userId, const int &countryId);
 void addGuildMentionCounter(const int &guildId, const int &countryId);
 std::vector<TopCountryData> getTopThreeMentionedCountries();
-std::vector<TopCountryData> getUserTopThreeMentionedCountries();
+std::vector<TopCountryData> getUserTopThreeMentionedCountries(const int &userID);
 void initDatabase();
 
 #endif // DATABASE_H

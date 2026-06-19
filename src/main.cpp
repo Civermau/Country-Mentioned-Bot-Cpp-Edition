@@ -49,11 +49,10 @@ int main() {
             country.en_name + ".jpg",
             dpp::utility::read_file("Images/" + country.en_name + ".jpg"));
 
-
         addMentionCounter(country.id);
         addUserMentionCounter(event.msg.author.id, country.id);
         addGuildMentionCounter(event.msg.guild_id, country.id);
-        
+
         if (++filesAdded == 10) {
           event.reply(m);
           m = emptyMessage;
@@ -65,21 +64,35 @@ int main() {
       event.reply(m);
   });
 
-
   // ! ----------------------------------------
   // ! ---------------------------------------- ON SLASH COMMAND
   // ! ----------------------------------------
-  bot.on_slashcommand([](const dpp::slashcommand_t &event) {
+  bot.on_slashcommand([&bot](const dpp::slashcommand_t &event) {
     if (event.command.get_command_name() == "info") {
-      std::vector<TopCountryData> topCountries = getTopThreeMentionedCountries();
+      std::vector<TopCountryData> topCountries =
+          getTopThreeMentionedCountries();
       event.reply(
           dpp::message(event.command.channel_id, buildInfoEmbed(topCountries)));
-    } 
-    
+    }
+
     else if (event.command.get_command_name() == "user_info") {
-     std::vector<TopCountryData> topUserCountries = getUserTopThreeMentionedCountries(); 
-     event.reply(
-        dpp::message(event.command.channel_id, buildUserInfoEmbed(topUserCountries)));
+      auto user_param = event.get_parameter("user");
+
+      if (std::holds_alternative<dpp::snowflake>(user_param)) {
+        int user_id = std::get<dpp::snowflake>(user_param);
+
+        if (std::get<dpp::snowflake>(user_param) == bot.me.id){
+          event.reply(dpp::message("I cannot mention countries you silly potato"));
+          return;
+        }
+
+        std::vector<TopCountryData> topUserCountries = getUserTopThreeMentionedCountries(user_id);
+        event.reply(dpp::message(event.command.channel_id, buildUserInfoEmbed(topUserCountries)));
+
+      } else {
+        std::vector<TopCountryData> topUserCountries = getUserTopThreeMentionedCountries(event.command.usr.id);
+        event.reply(dpp::message(event.command.channel_id, buildUserInfoEmbed(topUserCountries)));
+      }
     }
   });
 
