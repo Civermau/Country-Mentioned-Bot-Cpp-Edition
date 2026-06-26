@@ -2,7 +2,6 @@
 #define DATABASE_H
 
 #include "types.h"
-#include <string>
 #include <vector>
 
 std::vector<CountryData> getCountries();
@@ -11,6 +10,7 @@ void addUserMentionCounter(const int &userId, const int &countryId);
 void addGuildMentionCounter(const int &guildId, const int &countryId);
 std::vector<TopCountryData> getTopThreeMentionedCountries();
 std::vector<TopCountryData> getUserTopThreeMentionedCountries(const int &userID);
+std::vector<TopCountryData> getGuildTopThreeMentionedCountries(const int &guildID);
 void initDatabase();
 
 #endif // DATABASE_H

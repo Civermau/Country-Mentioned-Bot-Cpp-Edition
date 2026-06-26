@@ -1,4 +1,5 @@
 #include "database.h"
+#include "types.h"
 #include <iostream>
 #include <sqlite3.h>
 
@@ -17,7 +18,6 @@ void initDatabase() {
                     "   mentions INTEGER NOT NULL DEFAULT 0,"
                     "   FOREIGN KEY (id) REFERENCES countries(id)"
                     ");"
-
 
                     "CREATE TABLE IF NOT EXISTS guild_mentions ("
                     "   id INTEGER NOT NULL,"
@@ -46,9 +46,9 @@ void initDatabase() {
   sqlite3_close(db);
 }
 
-  // ! ----------------------------------------
-  // ! ---------------------------------------- GLOBAL MENTIONS
-  // ! ----------------------------------------
+// ! ----------------------------------------
+// ! ---------------------------------------- GLOBAL MENTIONS
+// ! ----------------------------------------
 void addMentionCounter(const int &id) {
   sqlite3 *db;
   sqlite3_open("CountryMentionedBot.db", &db);
@@ -63,15 +63,16 @@ void addMentionCounter(const int &id) {
   sqlite3_close(db);
 }
 
-  // ! ----------------------------------------
-  // ! ---------------------------------------- USER MENTIONS
-  // ! ----------------------------------------
-void addUserMentionCounter(const int &userId, const int &countryId){
+// ! ----------------------------------------
+// ! ---------------------------------------- USER MENTIONS
+// ! ----------------------------------------
+void addUserMentionCounter(const int &userId, const int &countryId) {
   sqlite3 *db;
   sqlite3_open("CountryMentionedBot.db", &db);
   sqlite3_stmt *stmt;
-  const char *sql = "INSERT INTO user_mentions (id, user_id, mentions) VALUES (?, ?, 1) ON "
-                    "CONFLICT(id, user_id) DO UPDATE SET mentions = mentions + 1";
+  const char *sql =
+      "INSERT INTO user_mentions (id, user_id, mentions) VALUES (?, ?, 1) ON "
+      "CONFLICT(id, user_id) DO UPDATE SET mentions = mentions + 1";
 
   if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {
     sqlite3_bind_int(stmt, 1, countryId);
@@ -82,15 +83,16 @@ void addUserMentionCounter(const int &userId, const int &countryId){
   sqlite3_close(db);
 }
 
-  // ! ----------------------------------------
-  // ! ---------------------------------------- GUILD MENTIONS
-  // ! ----------------------------------------
-void addGuildMentionCounter(const int &guildId, const int &countryId){
+// ! ----------------------------------------
+// ! ---------------------------------------- GUILD MENTIONS
+// ! ----------------------------------------
+void addGuildMentionCounter(const int &guildId, const int &countryId) {
   sqlite3 *db;
   sqlite3_open("CountryMentionedBot.db", &db);
   sqlite3_stmt *stmt;
-  const char *sql = "INSERT INTO guild_mentions (id, guild, mentions) VALUES (?, ?, 1) ON "
-                    "CONFLICT(id, guild) DO UPDATE SET mentions = mentions + 1";
+  const char *sql =
+      "INSERT INTO guild_mentions (id, guild, mentions) VALUES (?, ?, 1) ON "
+      "CONFLICT(id, guild) DO UPDATE SET mentions = mentions + 1";
 
   if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {
     sqlite3_bind_int(stmt, 1, countryId);
@@ -102,7 +104,9 @@ void addGuildMentionCounter(const int &guildId, const int &countryId){
 }
 
 
-
+// ! ----------------------------------------
+// ! ---------------------------------------- GET GLOBAL MENTIONS
+// ! ----------------------------------------
 std::vector<TopCountryData> getTopThreeMentionedCountries() {
   std::vector<TopCountryData> topCountries;
   sqlite3 *db;
@@ -128,17 +132,21 @@ std::vector<TopCountryData> getTopThreeMentionedCountries() {
   return topCountries;
 }
 
-
-
-std::vector<TopCountryData> getUserTopThreeMentionedCountries(const int &userID) { 
+// ! ----------------------------------------
+// ! ---------------------------------------- GET USER MENTIONS
+// ! ----------------------------------------
+std::vector<TopCountryData> getUserTopThreeMentionedCountries(const int &userID) {
   std::cout << "[DB] getUserTopThreeMentionedCountries userID: " << userID << std::endl;
+
   std::vector<TopCountryData> topUserCountries;
   sqlite3 *db;
   sqlite3_open("CountryMentionedBot.db", &db);
   sqlite3_stmt *stmt;
-  const char *sql = "SELECT c.en, um.mentions FROM countries c INNER JOIN user_mentions um ON c.id = um.id WHERE um.user_id = ? ORDER BY um.mentions DESC LIMIT 3";
+  const char *sql =
+      "SELECT c.en, um.mentions FROM countries c INNER JOIN user_mentions um "
+      "ON c.id = um.id WHERE um.user_id = ? ORDER BY um.mentions DESC LIMIT 3";
 
-  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {\
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {
     sqlite3_bind_int(stmt, 1, userID);
     while (sqlite3_step(stmt) == SQLITE_ROW) {
       TopCountryData country;
@@ -153,17 +161,47 @@ std::vector<TopCountryData> getUserTopThreeMentionedCountries(const int &userID)
     sqlite3_finalize(stmt);
   }
   sqlite3_close(db);
+
   return topUserCountries;
 }
 
-// // std::vector<TopCountryData> getGuildTopThreeMentionedCountries() 
+// ! ----------------------------------------
+// ! ---------------------------------------- GET GUILD MENTIONS
+// ! ----------------------------------------
+std::vector<TopCountryData> getGuildTopThreeMentionedCountries(const int &guildID) {
+  std::cout << "[DB] getGuildTopThreeMentionedCountries guildID: " << guildID << std::endl;
+
+  std::vector<TopCountryData> topGuildCountries;
+  sqlite3 *db;
+  sqlite3_open("CountryMentionedBot.db", &db);
+  sqlite3_stmt *stmt;
+  const char *sql =
+      "SELECT c.en, gm.mentions FROM countries c INNER JOIN guild_mentions gm "
+      "ON c.id = gm.id WHERE gm.guild = ? ORDER BY gm.mentions DESC LIMIT 3";
+
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) == SQLITE_OK) {
+    sqlite3_bind_int(stmt, 1, guildID);
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+      TopCountryData country;
+      const unsigned char *name_result = sqlite3_column_text(stmt, 0);
+      if (name_result)
+        country.name = reinterpret_cast<const char *>(name_result);
+      const unsigned char *mentions_result = sqlite3_column_text(stmt, 1);
+      if (mentions_result)
+        country.mentions = reinterpret_cast<const char *>(mentions_result);
+      topGuildCountries.push_back(country);
+    }
+    sqlite3_finalize(stmt);
+  }
+  sqlite3_close(db);
+
+  return topGuildCountries;
+}
 
 
-
-
-
-
-
+// ! ----------------------------------------
+// ! ---------------------------------------- GET COUNTRIES
+// ! ----------------------------------------
 std::vector<CountryData> getCountries() {
   std::vector<CountryData> countries;
   sqlite3 *db;

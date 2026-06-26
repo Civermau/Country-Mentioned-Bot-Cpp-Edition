@@ -1,6 +1,7 @@
 #include "database.h"
 #include "embeds.h"
 #include "helpers.h"
+#include "types.h"
 #include <dpp/dpp.h>
 #include <iostream>
 
@@ -34,7 +35,7 @@ int main() {
     if (event.msg.author.id == bot.me.id)
       return;
 
-    std::cout << event.msg.content << std::endl;
+    // std::cout << event.msg.content << std::endl;
 
     std::string uppercaseMessage = toUpperUTF8(event.msg.content);
 
@@ -68,30 +69,52 @@ int main() {
   // ! ---------------------------------------- ON SLASH COMMAND
   // ! ----------------------------------------
   bot.on_slashcommand([&bot](const dpp::slashcommand_t &event) {
+    // * --------------------------------------
+    // * -------------------------------------- GLOBAL INFO COMMAND
+    // * --------------------------------------
     if (event.command.get_command_name() == "info") {
       std::vector<TopCountryData> topCountries =
           getTopThreeMentionedCountries();
-      event.reply(
-          dpp::message(event.command.channel_id, buildInfoEmbed(topCountries)));
+      event.reply(dpp::message(event.command.channel_id, buildInfoEmbed(topCountries)));
     }
 
+    // * --------------------------------------
+    // * -------------------------------------- GUILD INFO COMMAND
+    // * --------------------------------------
+    else if (event.command.get_command_name() == "server_info") {
+      if (event.command.guild_id == 0) {
+        event.reply(dpp::message("This command can only be used in a server!"));
+        return;
+      }
+      dpp::snowflake guild_id = event.command.guild_id;
+      std::vector<TopCountryData> topGuildCountries = getGuildTopThreeMentionedCountries(guild_id);
+      event.reply(dpp::message(event.command.channel_id, buildUserInfoEmbed(topGuildCountries)));
+    }
+
+    // * --------------------------------------
+    // * -------------------------------------- USER INFO COMMAND
+    // * --------------------------------------
     else if (event.command.get_command_name() == "user_info") {
       auto user_param = event.get_parameter("user");
 
       if (std::holds_alternative<dpp::snowflake>(user_param)) {
         int user_id = std::get<dpp::snowflake>(user_param);
 
-        if (std::get<dpp::snowflake>(user_param) == bot.me.id){
-          event.reply(dpp::message("I cannot mention countries you silly potato"));
+        if (std::get<dpp::snowflake>(user_param) == bot.me.id) {
+          event.reply(
+              dpp::message("I cannot mention countries you silly potato"));
           return;
         }
 
-        std::vector<TopCountryData> topUserCountries = getUserTopThreeMentionedCountries(user_id);
+        std::vector<TopCountryData> topUserCountries =
+            getUserTopThreeMentionedCountries(user_id);
         event.reply(dpp::message(event.command.channel_id, buildUserInfoEmbed(topUserCountries)));
 
       } else {
-        std::vector<TopCountryData> topUserCountries = getUserTopThreeMentionedCountries(event.command.usr.id);
-        event.reply(dpp::message(event.command.channel_id, buildUserInfoEmbed(topUserCountries)));
+        std::vector<TopCountryData> topUserCountries =
+            getUserTopThreeMentionedCountries(event.command.usr.id);
+        event.reply(dpp::message(event.command.channel_id,
+                                 buildUserInfoEmbed(topUserCountries)));
       }
     }
   });
